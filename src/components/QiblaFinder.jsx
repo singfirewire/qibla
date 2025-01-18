@@ -79,26 +79,26 @@ const QiblaFinder = () => {
   const rotationDifference = qiblaDirection && compass ? calculateRotationDirection(qiblaDirection, compass) : null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">ค้นหาทิศกิบลัต</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md transform transition-all hover:scale-105">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Qibla Finder</h1>
 
         {error ? (
           <div className="text-red-500 text-center mb-4">{error}</div>
         ) : location ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="text-center">
-              <p>ละติจูด: {location.latitude.toFixed(4)}°</p>
-              <p>ลองจิจูด: {location.longitude.toFixed(4)}°</p>
+              <p className="text-gray-600">ละติจูด: {location.latitude.toFixed(4)}°</p>
+              <p className="text-gray-600">ลองจิจูด: {location.longitude.toFixed(4)}°</p>
               {qiblaDirection && (
-                <p className="font-bold mt-2">ทิศกิบลัต: {qiblaDirection.toFixed(1)}°</p>
+                <p className="font-bold text-xl text-purple-600 mt-2">ทิศกิบลัต: {qiblaDirection.toFixed(1)}°</p>
               )}
             </div>
 
-            <div className="relative w-48 h-48 mx-auto">
+            <div className="relative w-64 h-64 mx-auto">
               {/* เข็มทิศพื้นหลัง */}
               <div className="absolute inset-0">
-                <Compass size={192} className="text-gray-400" />
+                <Compass size={256} className="text-gray-300" />
               </div>
 
               {/* ลูกศรชี้ทิศกิบลัต */}
@@ -107,30 +107,32 @@ const QiblaFinder = () => {
                   className="absolute inset-0 transition-transform duration-200"
                   style={{ transform: `rotate(${qiblaDirection}deg)` }}
                 >
-                  <div className="w-1 h-24 bg-green-500 mx-auto transform origin-bottom" />
+                  <div className="w-2 h-32 bg-gradient-to-b from-purple-600 to-purple-400 mx-auto transform origin-bottom rounded-full shadow-lg" />
                 </div>
               )}
             </div>
 
             {/* แสดงทิศทางที่ต้องหมุน */}
             {rotationDifference !== null && (
-              <div className="text-center mt-4">
-                <p className="font-bold">
-                  {Math.abs(rotationDifference).toFixed(1)}° ไปทาง{' '}
-                  {rotationDifference > 0 ? 'ขวา' : 'ซ้าย'}
+              <div className="text-center mt-6">
+                <p className="font-bold text-lg text-gray-700">
+                  หมุนไปทาง{' '}
+                  <span className="text-purple-600">
+                    {Math.abs(rotationDifference).toFixed(1)}° {rotationDifference > 0 ? 'ขวา' : 'ซ้าย'}
+                  </span>
                 </p>
-                <div className="flex justify-center mt-2">
+                <div className="flex justify-center mt-4">
                   {rotationDifference > 0 ? (
-                    <ArrowRight className="text-green-500" size={32} />
+                    <ArrowRight className="text-purple-600 animate-bounce" size={40} />
                   ) : (
-                    <ArrowLeft className="text-green-500" size={32} />
+                    <ArrowLeft className="text-purple-600 animate-bounce" size={40} />
                   )}
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <div className="text-center">กำลังค้นหาตำแหน่ง...</div>
+          <div className="text-center text-gray-600">กำลังค้นหาตำแหน่ง...</div>
         )}
       </div>
     </div>
