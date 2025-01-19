@@ -8,22 +8,18 @@ const QiblaFinder = () => {
 
   // ฟังก์ชันคำนวณทิศกิบลัต
   const calculateQiblaDirection = (lat, lng) => {
-    // พิกัดของกะอฺบะฮฺ (มักกะฮฺ)
     const kaabaLat = 21.4225;
     const kaabaLng = 39.8262;
 
-    // แปลงองศาเป็นเรเดียน
     const phi1 = (lat * Math.PI) / 180;
     const phi2 = (kaabaLat * Math.PI) / 180;
     const lambda1 = (lng * Math.PI) / 180;
     const lambda2 = (kaabaLng * Math.PI) / 180;
 
-    // คำนวณทิศทาง
     const y = Math.sin(lambda2 - lambda1);
     const x = Math.cos(phi1) * Math.tan(phi2) - Math.sin(phi1) * Math.cos(lambda2 - lambda1);
     let qibla = Math.atan2(y, x);
 
-    // แปลงกลับเป็นองศา
     qibla = (qibla * 180) / Math.PI;
     return (qibla + 360) % 360;
   };
@@ -51,10 +47,8 @@ const QiblaFinder = () => {
   useEffect(() => {
     const handleOrientation = (event) => {
       if (event.webkitCompassHeading) {
-        // สำหรับ iOS
         setCompass(event.webkitCompassHeading);
       } else if (event.alpha) {
-        // สำหรับ Android
         setCompass(360 - event.alpha);
       }
     };
@@ -78,8 +72,17 @@ const QiblaFinder = () => {
 
   const rotationDifference = qiblaDirection && compass ? calculateRotationDirection(qiblaDirection, compass) : null;
 
+  // กำหนดสีพื้นหลังตามความถูกต้องของทิศทาง
+  const getBackgroundColor = () => {
+    if (rotationDifference === null) return 'bg-gradient-to-br from-blue-50 to-purple-100';
+    const absDifference = Math.abs(rotationDifference);
+    if (absDifference <= 10) return 'bg-green-100'; // ถูกต้อง (สีเขียวพาสเทล)
+    if (absDifference <= 45) return 'bg-yellow-100'; // ใกล้ถูกต้อง (สีเหลืองพาสเทล)
+    return 'bg-red-100'; // ผิดด้าน (สีแดงพาสเทล)
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-4">
+    <div className={`flex flex-col items-center justify-center min-h-screen p-4 ${getBackgroundColor()}`}>
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md transform transition-all hover:scale-105">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Qibla Finder</h1>
 
